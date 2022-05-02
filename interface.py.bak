@@ -1,0 +1,119 @@
+from re import Pattern
+import traceback
+import time
+
+# import fix_encoding.latin as latin
+import latin
+
+def type_check(fnc):
+    def inner(self, s: str):
+        if not isinstance(s, str) or not(s):
+            raise TypeError
+        return fnc(self, s)
+    return inner
+            
+
+class FixEncoding(object):
+
+    @type_check
+    def __init__(self, s: str):
+        self.s: str = s
+        self.unique_individual_symbols: set[str] = set(s)
+        language: str = ""
+        self.COMBINING_SUPPORTED: set[str]
+        self.COMBINING_FULL: set[str]
+        self.SUPPORTED_RANGE: set[str]
+        self.STANDARD_MAP_BYTES: dict[bytes, bytes]
+        self.STANDARD_MAP_STR: dict[str, str]
+        self.PATTERN: Pattern
+        # NOT_IMPLEMENTED: 0x0370 - 0x2FA1E
+
+        # only latin range is supported yet (U+0000 - U+036F)
+        if not (self.s_ - (latin.SUPPORTED_RANGE | self.COMBINING_FULL)):
+            language = "latin"
+        else:
+            raise NotImplementedError("Non latin character detected")
+
+        # dynamically inject module's namespace in class's
+        # according to detected unicode range
+        self.__dict__.update(globals()[language].__dict__)
+        # self.lang = globals()[language]
+        self.prepped_s: list[str] = [ i for i in self ]
+        self.unique_individual_characters: set[str] = { i for i in self }
+        # self.bytes_s: list[bytes] = [ i.encode('utf8') for i in self ]
+        # self.bytes_s_: set[bytes] = { i.encode('utf8') for i in self }
+
+    def isInvalid(self) -> bool:
+        """verifies the string passed to constructor contains combined diacritical marks"""
+        if (self.unique_individual_symbols & self.COMBINING_SUPPORTED):
+            return True
+        return False
+    
+    def isFixable(self) -> bool:
+        """verifies the string passed to constructor contains only substituable characters"""
+        if(self.unique_individual_characters - self.STANDARD_MAP_STR.keys()):
+            return False
+        return True
+
+    # ToDo: better algorithm to map string
+    #  -> needed for 2 or more diacritical marks support
+    def fix(self) -> str:
+        """attempt to fix a string that contains 
+        combined diacritical marks"""
+        offset: int = 0
+        key: bytes
+        msg: str
+        s_: bytes = self.s.encode("utf8")
+        try:
+            while (match_oject := self.PATTERN.search(s_)):
+                offset = match_oject.start()
+                key = s_[offset-1:offset+2]
+                s_ = s_[:offset-1] + self.STANDARD_MAP[key] + s_[offset+2:]
+        except KeyError:
+            try:
+                key.decode("utf8")
+                msg = f"{self.s}\n{key}\nPossible non-valid latin character\n"
+                print(msg)
+            except UnicodeDecodeError:
+                msg = f"{self.s}\n{key}\nPossible 2 or more diacritical marks\n"
+                print(msg)
+            finally:
+                return self.s
+        except IndexError:
+            traceback.print_exc()
+            raise
+
+        return s_.decode("utf8")
+
+    def __iter__(self):
+        self.n: int = 0
+        self.max = len(self.s)
+        return self
+
+    def __next__(self) -> str:
+        """iterates over string according to effectively displayed characters"""
+
+        if self.n >= self.max:
+            raise StopIteration
+
+        buffer: list[str] = []
+        try:
+            buffer.append(self.s[self.n])
+            while (self.s[self.n+1] in self.COMBINING_FULL):
+                buffer.append(self.s[self.n+1])
+                self.n += 1
+
+        except IndexError:
+            pass
+
+        finally:
+            self.n += 1
+            return "".join(buffer)
+
+    def __len__(self):
+        """returns effective display length"""
+        n: int = 0
+        for i in self.s:
+            if i not in self.COMBINING_FULL:
+                n += 1
+        return n
