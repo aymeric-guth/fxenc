@@ -1,5 +1,6 @@
 from re import Pattern, Match, compile
 from typing import Any, Optional
+import pathlib
 
 """
 All data comes from https://www.utf8-chartable.de/
@@ -7,6 +8,7 @@ LATIN
 Data extraction valid for raw.csv (U+0000 - U+02AF)
 """
 
+path = pathlib.PurePath(__file__).parent
 p: str = r"^LATIN\s((SMALL|CAPITAL)\sLETTER)\s([A-Z]{1,6}(?=\sWITH\s))\sWITH\s(.*)$"
 pattern: Pattern = compile(p)
 
@@ -17,7 +19,7 @@ _: str
 results: list[tuple[Any, ...]] = []
 
 def main() -> list[tuple[Any, ...]]:
-    with open("raw.csv", "r") as f:
+    with open(path / "raw.csv", "r") as f:
         raw = f.read()
 
     for row in raw.split("\n")[:-1]:

@@ -1,10 +1,24 @@
+#!/usr/bin/env python3
 import sys
+import os.path
+import pathlib
 from typing import Any
 
 from parse_combining import main as pc
 from parse_raw import main as pr
 from parse_raw_double import main as prd
 from template import lookup_table
+
+
+# if len(sys.argv) != 2:
+#     print(sys.argv)
+#     raise SystemExit("Usage: build_index.py <path-to-index-directory>")
+# if not os.path.isdir(sys.argv[1]):
+#     raise SystemExit(f"Unkown path: {sys.argv[1]}")
+
+# dst = pathlib.PurePath(sys.argv[1])
+dst = pathlib.PurePath(__file__).parent.parent
+
 
 """
 Valid for LATIN charset (U+0000 - U+02AF)
@@ -97,7 +111,7 @@ combining_full.remove(chr(0x0343))
 combining_full.remove(chr(0x0344))
 combining_full.remove(chr(0x0345))
 
-with open("latin.py", "w") as file:
+with open(dst / "latin.py", "w") as file:
     file.write("### GENERATED AUTOMATICALLY ###\n")
     # file.write("from re import Pattern, compile\n\n")
     # for debug purpose and eventual future use

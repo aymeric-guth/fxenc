@@ -1,3 +1,4 @@
+import pathlib
 from re import Pattern, Match, compile
 from typing import Any, Optional
 
@@ -9,6 +10,8 @@ are excluded U+0342, U+0343, U+0344, U+0345 : Greek support will be done in a se
 combining 1 diacritical mark
 """
 
+path = pathlib.PurePath(__file__).parent
+
 p: str = r"COMBINING\s(.*)"
 pattern: Pattern = compile(p)
 letter: str
@@ -18,7 +21,7 @@ _: str
 results: list[tuple[Any, ...]] = []
 
 def main() -> list[tuple[Any, ...]]:
-    with open("combining.csv", "r") as f:
+    with open(path / "combining.csv", "r") as f:
         raw = f.read()
 
     for row in raw.split("\n")[:-1]:    

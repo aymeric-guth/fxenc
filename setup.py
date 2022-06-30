@@ -21,7 +21,5 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
     ],
-    # entry_points={
-    #     'console_scripts': ['fix_encoding = fix_encoding.cli:main']
-    # },
+    scripts=['build_index/build']
 )

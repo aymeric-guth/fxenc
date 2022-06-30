@@ -74,4 +74,3 @@ def quickfix(s: str) -> str:
         return FxEnc(s).fix()
     except NotImplementedError:
         return s
-

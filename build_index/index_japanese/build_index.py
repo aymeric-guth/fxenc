@@ -1,15 +1,76 @@
-from template_katakana import katakana
-from template_hiragana import hiragana
+#!/usr/bin/env python3
+import sys
+import os.path
+import pathlib
+
+
+# if len(sys.argv) != 2:
+#     print(sys.argv)
+#     raise SystemExit("Usage: build_index.py <path-to-index-directory>")
+# if not os.path.isdir(sys.argv[1]):
+#     raise SystemExit(f"Unkown path: {sys.argv[1]}")
+
+# dst = pathlib.PurePath(sys.argv[1])
+dst = pathlib.PurePath(__file__).parent.parent
+
+# from template_katakana import katakana
+# from template_hiragana import hiragana
 # U+3099	゙	e3 82 99	COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK
 # U+309A	゚	e3 82 9a	COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK
+hiragana = [
+    ("か","が"),
+    ("き","ぎ"),
+    ("く","ぐ"),
+    ("け","げ"),
+    ("こ","ご"),
+    ("さ","ざ"),
+    ("し","じ"),
+    ("す","ず"),
+    ("せ","ぜ"),
+    ("そ","ぞ"),
+    ("た","だ"),
+    ("ち","ぢ"),
+    ("つ","づ"),
+    ("て","で"),
+    ("と","ど"),
+    ("は","ば","ぱ"),
+    ("ひ","び","ぴ"),
+    ("ふ","ぶ","ぷ"),
+    ("へ","べ","ぺ"),
+    ("ほ","ぼ","ぽ"),
+    ("う","ゔ")
+]
+katakana = [ 
+    ("ゝ","ゞ"),
+    ("カ","ガ"),
+    ("キ","ギ"),
+    ("ク","グ"),
+    ("ケ","ゲ"),
+    ("コ","ゴ"),
+    ("サ","ザ"),
+    ("シ","ジ"),
+    ("ス","ズ"),
+    ("セ","ゼ"),
+    ("ソ","ゾ"),
+    ("タ","ダ"),
+    ("チ","ヂ"),
+    ("ツ","ヅ"),
+    ("テ","デ"),
+    ("ト","ド"),
+    ("ハ","バ","パ"),
+    ("ヒ","ビ","ピ"),
+    ("フ","ブ","プ"),
+    ("ヘ","ベ","ペ"),
+    ("ホ","ボ","ポ"),
+    ("ウ","ヴ"),
+    ("ワ","ヷ"),
+    ("ヰ","ヸ"),
+    ("ヱ","ヹ"),
+    ("ヲ","ヺ"),
+    ("ヽ","ヾ")
+]
 native = katakana + hiragana
-# lookup_table_katakana: dict[str, str] = {}
-# combining: list[tuple[Any, ...]] = []
-# native: list[tuple[Any, ...]] = []
-# combining_ = pc()
-# native = pr()
-# native_double = prd()
-# lookup_table_combining: dict[str, str] = { k: v for (v, k) in combining_ }
+
 standard_str: list[str] = []
 standard_bytes: list[bytes] = []
 non_standard_str: list[str] = []
@@ -57,7 +118,7 @@ for i in range(KANJI_LOWER_RANGE, KANJI_UPPER_RANGE+1):
 combining_full: set[str] = {dakuten.decode("utf8"), handakuten.decode("utf8")}
 combining_supported: set[str] = combining_full
 
-with open("japanese.py", "w") as file:
+with open(dst / "japanese.py", "w") as file:
     file.write("### GENERATED AUTOMATICALLY ###\n")
 
     file.write("STANDARD_MAP_BYTES: dict[bytes, bytes] = {\n")
