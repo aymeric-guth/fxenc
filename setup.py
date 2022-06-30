@@ -21,5 +21,5 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
     ],
-    scripts=['build_index/build']
+    scripts=['build_index/build.py']
 )
