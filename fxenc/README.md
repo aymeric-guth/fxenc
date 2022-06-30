@@ -37,31 +37,33 @@ buggy or invalid filenames, depending on your OS, software and unicode support.
 ## Installation
 
 Use setup.py
-```bash
-python3 setup.py install
+```shell
+python3 -m pip install "git+https://git.ars-virtualis.org/yul/fix_encoding@master"
 ```
 
 
 ## Usage
 
 ```python
-from fix_encoding import FixEncoding
+from fxenc import FxEnc, quickfix
 
 latin_utf8_string = "thÌȘ īs ă tȄšt"
-fixEncoding = FixEncoding(latin_utf8_string)
+fxenc = FixEnc(latin_utf8_string)
 
 # detection of combining diacritical marks
-if fixEncoding.containsCombining():
-    # a native candidate exists for subtitution ?
-    if fixEncoding.isFixable():
-        fixed_string = fixEncoding.fix()
-    else:
-        # prints a list of non-substituable characters
-        print(fixEncoding.getNonSubtituable())
+if fxenc:
+    try:
+        # a native candidate exists for subtitution ?
+        fixed_string = fxenc.fix()
+    except NotImplementedError as err:
+        print(err)
 
-# convinient iteration over graphemes
-for grapheme in fixEncoding:
+# convenient iteration over graphemes
+for grapheme in fxenc:
     print(grapheme)
+
+# helper function
+fixed = quickfix(latin_utf8_string)
 ```
 
 

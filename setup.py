@@ -2,14 +2,14 @@ from setuptools import setup
 
 
 setup(
-    name='fixenc',
+    name='fxenc',
     version='0.0.3',
     license='GPLv2+',
     url='https://git.ars-virtualis.org/yul/fix_encoding',
     description='Cross-platform clipboard utilities supporting both binary and text data.',
     author_email='aymeric.guth@protonmail.com',
     author='Aymeric Guth',
-    packages=['fixenc'],
+    packages=['fxenc'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',

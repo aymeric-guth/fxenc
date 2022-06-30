@@ -120,12 +120,12 @@ STANDARD_MAP_STR: dict[str, str] = {
 	'ゔ': 'ゔ',
 }
 COMBINING_SUPPORTED: set[str] = {
-	"゚",
 	"゙",
+	"゚",
 }
 COMBINING_FULL: set[str] = {
-	"゚",
 	"゙",
+	"゚",
 }
 SUPPORTED_RANGE: set[str] = {
 	"＀",
