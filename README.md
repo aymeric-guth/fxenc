@@ -48,7 +48,7 @@ python3 -m pip install "git+https://git.ars-virtualis.org/yul/fix_encoding@maste
 from fxenc import FxEnc, quickfix
 
 latin_utf8_string = "thÌȘ īs ă tȄšt"
-fxenc = FixEnc(latin_utf8_string)
+fxenc = FxEnc(latin_utf8_string)
 
 # detection of combining diacritical marks
 if fxenc:
